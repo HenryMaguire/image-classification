@@ -213,12 +213,12 @@ def conv_net(x, keep_prob):
     #    Play around with different number of outputs, kernel size and stride
     # Function Definition from Above:
     #    conv2d_maxpool(x_tensor, conv_num_outputs, conv_ksize, conv_strides, pool_ksize, pool_strides)
-    conv_layer1 = conv2d_maxpool(x, 32, (3,3),
-                   (1,1), (2,2), (2,2))
+    #conv_layer1 = conv2d_maxpool(x, 16, (4,4),
+    #               (1,1), (2,2), (2,2))
     #conv_layer2 = conv2d_maxpool(conv_layer1, 32, (3,3),
     #               (1,1),(2,2),(2,2))
     #dropout = tf.nn.dropout(conv_layer2, keep_prob)
-    conv_layerf = conv2d_maxpool(conv_layer1, 64, (3,3),
+    conv_layerf = conv2d_maxpool(x, 32, (3,3),
                                  (1,1), (2,2), (2,2))
 
     #conv_layer4 = (conv_layer2, 128, (5,5),
@@ -233,9 +233,9 @@ def conv_net(x, keep_prob):
     #    Play around with different number of outputs
     # Function Definition from Above:
     #   fully_conn(x_tensor, num_outputs)
-    fc_layer1 = fully_conn(flatten_layer, 256)
+    fc_layerf = fully_conn(flatten_layer, 64)
     #dropout = tf.nn.dropout(fc_layer1, keep_prob)
-    fc_layerf = fully_conn(fc_layer1, 128)
+    #fc_layerf = fully_conn(fc_layer1, 64)
     # TODO: Apply an Output Layer
     #    Set this to the number of classes
     # Function Definition from Above:
@@ -298,15 +298,15 @@ def print_stats(session, feature_batch, label_batch, cost, accuracy):
 
 
 # TODO: Tune Parameters
-epochs = 50
-batch_size = 64
-keep_probability = 1.
+epochs = 10
+batch_size = 32
+keep_probability = 0.99
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL
 """
 print('Checking the Training on a Single Batch...')
-with tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=2)) as sess:
+with tf.Session() as sess:
     # Initializing the variables
     sess.run(tf.global_variables_initializer())
 
@@ -323,7 +323,7 @@ with tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=2)) as sess:
 DON'T MODIFY ANYTHING IN THIS CELL
 """
 save_model_path = './image_classification'
-
+"""
 print('Training...')
 with tf.Session() as sess:
     # Initializing the variables
@@ -342,3 +342,4 @@ with tf.Session() as sess:
     # Save Model
     saver = tf.train.Saver()
     save_path = saver.save(sess, save_model_path)
+"""
