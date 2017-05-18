@@ -213,32 +213,27 @@ def conv_net(x, keep_prob):
     #    Play around with different number of outputs, kernel size and stride
     # Function Definition from Above:
     #    conv2d_maxpool(x_tensor, conv_num_outputs, conv_ksize, conv_strides, pool_ksize, pool_strides)
-    conv_layer1 = conv2d_maxpool(x, 32, (3,3),
+    conv_layer1 = conv2d_maxpool(x, 20, (3,3),
                    (1,1), (2,2), (2,2))
     #conv_layer2 = conv2d_maxpool(conv_layer1, 32, (3,3),
     #               (1,1),(2,2),(2,2))
     #dropout = tf.nn.dropout(conv_layer2, keep_prob)
-    conv_layerf = conv2d_maxpool(conv_layer1, 64, (3,3),
+    conv_layerf = conv2d_maxpool(conv_layer1, 60, (3,3),
                                  (1,1), (2,2), (2,2))
 
     #conv_layer4 = (conv_layer2, 128, (5,5),
     #               (2,2))
-    # TODO: Apply a Flatten Layer
+
     # Function Definition from Above:
     #   flatten(x_tensor)
     flatten_layer = flatten(conv_layerf)
 
-
-    # TODO: Apply 1, 2, or 3 Fully Connected Layers
     #    Play around with different number of outputs
     # Function Definition from Above:
     #   fully_conn(x_tensor, num_outputs)
-    fc_layer1 = fully_conn(flatten_layer, 256)
+    fc_layer1 = fully_conn(flatten_layer, 128)
     #dropout = tf.nn.dropout(fc_layer1, keep_prob)
     fc_layerf = fully_conn(fc_layer1, 128)
-    # TODO: Apply an Output Layer
-    #    Set this to the number of classes
-    # Function Definition from Above:
     #   output(x_tensor, num_outputs)
     output_layer = output(fc_layerf, len(lb.classes_))
     return output_layer
