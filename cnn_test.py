@@ -213,27 +213,33 @@ def conv_net(x, keep_prob):
     #    Play around with different number of outputs, kernel size and stride
     # Function Definition from Above:
     #    conv2d_maxpool(x_tensor, conv_num_outputs, conv_ksize, conv_strides, pool_ksize, pool_strides)
-    conv_layer1 = conv2d_maxpool(x, 20, (3,3),
+    conv_layer1 = conv2d_maxpool(x, 64, (3,3),
                    (1,1), (2,2), (2,2))
     #conv_layer2 = conv2d_maxpool(conv_layer1, 32, (3,3),
     #               (1,1),(2,2),(2,2))
     #dropout = tf.nn.dropout(conv_layer2, keep_prob)
-    conv_layerf = conv2d_maxpool(conv_layer1, 60, (3,3),
-                                 (1,1), (2,2), (2,2))
 
+    conv_layerf = conv2d_maxpool(conv_layer1, 128, (3,3),
+                                 (1,1), (2,2), (2,2))
+    conv_layerf = tf.nn.dropout(conv_layerf, keep_prob)
     #conv_layer4 = (conv_layer2, 128, (5,5),
     #               (2,2))
-
+    # TODO: Apply a Flatten Layer
     # Function Definition from Above:
     #   flatten(x_tensor)
     flatten_layer = flatten(conv_layerf)
 
+
+    # TODO: Apply 1, 2, or 3 Fully Connected Layers
     #    Play around with different number of outputs
     # Function Definition from Above:
     #   fully_conn(x_tensor, num_outputs)
-    fc_layer1 = fully_conn(flatten_layer, 128)
-    #dropout = tf.nn.dropout(fc_layer1, keep_prob)
-    fc_layerf = fully_conn(fc_layer1, 128)
+    fc_layer1 = fully_conn(flatten_layer, 1024)
+    dropout = tf.nn.dropout(fc_layer1, keep_prob)
+    fc_layerf = fully_conn(dropout, 512)
+    # TODO: Apply an Output Layer
+    #    Set this to the number of classes
+    # Function Definition from Above:
     #   output(x_tensor, num_outputs)
     output_layer = output(fc_layerf, len(lb.classes_))
     return output_layer
@@ -284,24 +290,28 @@ def print_stats(session, feature_batch, label_batch, cost, accuracy):
                 x: feature_batch,
                 y: label_batch,
                    keep_prob: 1.})
+    train_acc = sess.run(accuracy, feed_dict={
+                x: feature_batch,
+                y: label_batch,
+                keep_prob: 1.})
     valid_acc = sess.run(accuracy, feed_dict={
                 x: valid_features,
                 y: valid_labels,
                 keep_prob: 1.})
-    print "Loss: {}  |  Validation accuracy: {}".format(loss, valid_acc)
-    return loss, valid_acc
+    print "Loss: {}  |  Training accuracy: {}  |  Validation accuracy: {}".format(loss, train_acc, valid_acc)
+    return loss, train_acc, valid_acc
 
 
 # TODO: Tune Parameters
-epochs = 50
-batch_size = 64
-keep_probability = 1.
+epochs = 32
+batch_size = 128
+keep_probability = 0.6
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL
 """
 print('Checking the Training on a Single Batch...')
-with tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=2)) as sess:
+with tf.Session() as sess:
     # Initializing the variables
     sess.run(tf.global_variables_initializer())
 
